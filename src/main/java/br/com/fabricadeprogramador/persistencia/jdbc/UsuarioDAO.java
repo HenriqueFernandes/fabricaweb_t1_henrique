@@ -1,8 +1,12 @@
 package br.com.fabricadeprogramador.persistencia.jdbc;
 
+import java.awt.List;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.*;
 
 import br.com.fabricadeprogramador.persistencia.entidade.Usuario;
 
@@ -65,4 +69,74 @@ private Connection con = ConexaoFactory.getConnection();
 		
 	}
 
+	public void salvar(Usuario usu){
+		if(usu.getId() !=null && usu.getId()>0){
+			alterar(usu);
+		}else{
+			cadastrar(usu);
+		}
+		
+	}
+/**
+ * 
+ * @param id
+ * @return
+ */
+	public Usuario buscaPorId(Integer id){
+		Usuario usuRetorno = null;
+		
+		String sql = "select * from usuario where id=?";
+		try{
+			PreparedStatement preparador = con.prepareStatement(sql);
+			preparador.setInt(1, id);
+			//retorno da consulta.
+			ResultSet resultado = preparador.executeQuery();
+			if (resultado.next()){
+				//instancia o objeto Usuario.
+				usuRetorno = new Usuario();
+				usuRetorno.setId(resultado.getInt("id"));
+				usuRetorno.setNome(resultado.getString("nome"));
+				usuRetorno.setLogin(resultado.getString("login"));
+				usuRetorno.setSenha(resultado.getString("senha"));
+				preparador.close();
+				return usuRetorno;
+			}
+		}catch(SQLException e ){
+			throw new RuntimeException();
+		}
+		return null;
+	}
+	
+	/**
+	 * Realiza a busca de todos os elementos 
+	 * @return retorna uma lista com os objetos, ou zero
+	 */
+	public ArrayList<Usuario> buscaTodos(){
+		Usuario usuRetorno = null;
+		ArrayList<Usuario> lista = new ArrayList<Usuario>();
+		String sql = "select * from usuario";
+		try{
+			PreparedStatement preparador = con.prepareStatement(sql);
+			
+			//Return da consulta.
+			ResultSet resultado = preparador.executeQuery();
+			while (resultado.next()){
+				//instancia o objeto Usuario.
+				usuRetorno = new Usuario();
+				usuRetorno.setId(resultado.getInt("id"));
+				usuRetorno.setNome(resultado.getString("nome"));
+				usuRetorno.setLogin(resultado.getString("login"));
+				usuRetorno.setSenha(resultado.getString("senha"));
+				lista.add(usuRetorno);
+			}
+			
+			preparador.close();
+			
+		}catch(SQLException e ){
+			throw new RuntimeException();
+		}
+		return lista;
+	}
+	
+	
 }

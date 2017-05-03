@@ -9,8 +9,23 @@ import br.com.fabricadeprogramador.persistencia.jdbc.UsuarioDAO;
 public class TestUsuarioDAO {
 	
 	public static void main(String[] args){
-		testBuscaTodos();
+		autentica();
 	}
+	
+	
+	private static void autentica() {
+		Usuario usu = new Usuario();
+		usu.setLogin("fer");
+		usu.setSenha("123");
+		UsuarioDAO usuDAO = new UsuarioDAO();
+		
+		Usuario usuResult = usuDAO.autentica(usu);
+		
+		System.out.println(usuResult);
+		
+	}
+
+
 	private static void testBuscaTodos() {
 		// TODO Auto-generated method stub
 		UsuarioDAO usuDAO = new UsuarioDAO();

@@ -23,7 +23,7 @@ private Connection con = ConexaoFactory.getConnection();
 			preparador.setString(2, usu.getLogin());
 			preparador.setString(3, usu.getSenha());
 			
-			preparador.executeQuery();//executa comando no banco
+			preparador.executeUpdate();//executa comando no banco
 			preparador.close();//fecha o objeto preparador
 			
 		} catch (SQLException e) {
@@ -42,7 +42,7 @@ private Connection con = ConexaoFactory.getConnection();
 			preparador.setString(3, usu.getSenha());
 			preparador.setInt(4, usu.getId());
 			
-			preparador.executeQuery();//executa comando no banco
+			preparador.executeUpdate();//executa comando no banco
 			preparador.close();//fecha o objeto preparador
 			
 		} catch (SQLException e) {
@@ -136,6 +136,33 @@ private Connection con = ConexaoFactory.getConnection();
 			throw new RuntimeException();
 		}
 		return lista;
+	}
+
+	public Usuario autentica(Usuario usu) {
+		// TODO Auto-generated method stub
+		String sql = "select * from usuario where login=? and senha=?";
+		
+		try {
+			PreparedStatement preparador = con.prepareStatement(sql);
+			preparador.setString(1, usu.getLogin());
+			preparador.setString(2, usu.getSenha());
+			
+			ResultSet result = preparador.executeQuery();
+			if(result.next()){
+				Usuario usuario = new Usuario();
+				usuario.setId(result.getInt(1));
+				usuario.setNome(result.getString("nome"));
+				usuario.setLogin(result.getString("login"));
+				usuario.setSenha(result.getString("senha"));
+				return usuario;
+			}
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return null;
 	}
 	
 	
